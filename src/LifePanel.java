@@ -3,10 +3,14 @@ import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 
 
-public class LifePanel extends JPanel implements ActionListener{
+
+public class LifePanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener{
 
     int xPanel = 1300; int yPanel = 700;
     int size = 10;
@@ -16,15 +20,24 @@ public class LifePanel extends JPanel implements ActionListener{
     int[][] beforeLife = new int[xWidth][yHeight];
 
     boolean starts = true;
+    int initial = -1;
+    Timer time;
 
 
     public LifePanel(){
 
         setSize(xPanel, yPanel);
         setLayout(null);
+
+
+        addMouseMotionListener(this);
+        addMouseListener(this);
+
+
         setBackground(Color.BLACK);
 
-        new Timer(80,this).start();
+        time = new Timer(80,this);
+        time.start();
 
 
     }
@@ -157,4 +170,68 @@ public class LifePanel extends JPanel implements ActionListener{
         repaint();
 
     }
+
+    public void mouseDragged(MouseEvent e){
+
+        int x = e.getX() / size;
+        int y = e.getY() / size;
+
+        if (life[x][y] == 0 && initial == 0){
+            beforeLife[x][y] = 1;
+        }
+        else if (life[x][y] == 1 && initial == 1){
+            beforeLife[x][y] = 0;
+
+        }
+        repaint();
+
+    }
+
+    public void mouseMoved(MouseEvent e){
+
+
+    }
+
+    public void mouseClicked(MouseEvent e){
+
+
+
+
+    }
+
+    public void mousePressed(MouseEvent e){
+
+        time.stop();
+        int x = e.getX() / size;
+        int y = e.getY() / size;
+
+        if (life[x][y] == 0){
+            initial = 0;
+
+        }
+        else {
+            initial = 1;
+
+        }
+        repaint();
+
+    }
+
+    public void mouseReleased(MouseEvent e){
+
+        time.start();
+        initial = -1;
+
+    }
+
+    public void mouseEntered(MouseEvent e){
+
+
+    }
+
+    public void mouseExited(MouseEvent e){
+
+
+    }
+
 }

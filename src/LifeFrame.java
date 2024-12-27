@@ -17,5 +17,4 @@ public class LifeFrame extends JFrame {
         new LifeFrame();
 
     }
-
 }
