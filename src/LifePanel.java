@@ -1,18 +1,22 @@
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 
 
 
-public class LifePanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener{
+public class LifePanel extends JPanel implements ActionListener,
+        MouseListener, MouseMotionListener, KeyListener {
 
-    int xPanel = 1300; int yPanel = 700;
+    int xPanel = 1900; int yPanel = 1080;
     int size = 10;
     int xWidth = xPanel / size;
     int yHeight = yPanel / size;
@@ -27,17 +31,17 @@ public class LifePanel extends JPanel implements ActionListener, MouseListener, 
     public LifePanel(){
 
         setSize(xPanel, yPanel);
-        setLayout(null);
-
-
         addMouseMotionListener(this);
         addMouseListener(this);
+        addKeyListener(this);
+        setFocusable(true);
+
 
 
         setBackground(Color.BLACK);
 
         time = new Timer(80,this);
-        time.start();
+
 
 
     }
@@ -46,20 +50,19 @@ public class LifePanel extends JPanel implements ActionListener, MouseListener, 
 
         super.paintComponent(g);
 
+
         grid(g);
 
-        spawn(g);
         display(g);
 
 
     }
 
-
     private void grid(Graphics g){
 
-        g.setColor(Color.darkGray);
+        g.setColor(Color.DARK_GRAY);
 
-        for(int i = 0; i< life.length; i++) {
+        for(int i = 0; i < life.length; i++) {
 
             g.drawLine(0, i * size, xPanel, i * size);  //row
             g.drawLine(i * size, 0, i * size, yPanel); //colum
@@ -68,9 +71,8 @@ public class LifePanel extends JPanel implements ActionListener, MouseListener, 
 
     }
 
-    private void spawn(Graphics g) {
+    private void spawn() {
 
-        if(starts){
 
             for (int x = 0; x < life.length; x++){
                 for (int y = 0; y < (yHeight); y++){
@@ -79,15 +81,14 @@ public class LifePanel extends JPanel implements ActionListener, MouseListener, 
                         beforeLife[x][y] = 1;
                     }
                 }
+
             }
 
-            starts = false;
-        }
     }
 
     private void display(Graphics g){
 
-        g.setColor(Color.ORANGE);
+        g.setColor(Color.BLUE);
 
         copyArray();
 
@@ -140,6 +141,17 @@ public class LifePanel extends JPanel implements ActionListener, MouseListener, 
 
     }
 
+    private void clear(){
+
+        for (int x = 0; x < life.length; x++){
+            for (int y = 0; y < (yHeight); y++){
+
+                beforeLife[x][y] = 0;
+
+            }
+        }
+    }
+
     public void actionPerformed(ActionEvent e){
 
         int alive;
@@ -187,21 +199,10 @@ public class LifePanel extends JPanel implements ActionListener, MouseListener, 
 
     }
 
-    public void mouseMoved(MouseEvent e){
-
-
-    }
-
-    public void mouseClicked(MouseEvent e){
-
-
-
-
-    }
 
     public void mousePressed(MouseEvent e){
 
-        time.stop();
+
         int x = e.getX() / size;
         int y = e.getY() / size;
 
@@ -219,18 +220,62 @@ public class LifePanel extends JPanel implements ActionListener, MouseListener, 
 
     public void mouseReleased(MouseEvent e){
 
-        time.start();
+
         initial = -1;
+
+    }
+
+    public void keyPressed(KeyEvent e){
+
+        int code = e.getKeyCode();
+
+        if(code == e.VK_R){
+            spawn();
+
+            time.start();
+
+        }
+        else if(code == e.VK_C){
+            clear();
+            time.stop();
+
+        }
+        else if(code == e.VK_S){
+
+            time.start();
+        }
+
+        else if(code == e.VK_A){
+            time.stop();
+
+        }
+
+        repaint();
+
+    }
+
+    public void keyTyped(KeyEvent e){
+
+    }
+
+    public void keyReleased(KeyEvent e){
+
+    }
+
+
+    public void mouseMoved(MouseEvent e){
+
+    }
+
+    public void mouseClicked(MouseEvent e){
 
     }
 
     public void mouseEntered(MouseEvent e){
 
-
     }
 
     public void mouseExited(MouseEvent e){
-
 
     }
 
